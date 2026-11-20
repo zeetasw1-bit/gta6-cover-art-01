@@ -3,21 +3,107 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
+<title>Vice Cover Studio</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+<header class="topbar">
+  <div>
+    <h1>Vice Cover Studio</h1>
+    <p class="tagline">Turn your photos into a Sunset Bay poster cover — then share the PNG.</p>
+  </div>
+  <p class="steps"><strong>1</strong> Add photos &nbsp;→&nbsp; <strong>2</strong> Pick a layout &nbsp;→&nbsp; <strong>3</strong> Export PNG</p>
+</header>
+
 <main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
+  <section class="preview" aria-label="Cover preview">
+    <div class="canvas-wrap">
+      <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+    </div>
+    <div class="panel-bar" role="group" aria-label="Choose a panel to edit">
+      <span>Panel:</span>
+      <button type="button" data-panel="0" class="chip active">Panel 1</button>
+      <button type="button" data-panel="1" class="chip">Panel 2</button>
+      <button type="button" data-panel="2" class="chip">Panel 3</button>
+      <button type="button" data-panel="3" class="chip">Panel 4</button>
+    </div>
+    <p class="hint">Click a panel on the cover to select it. Drag inside a panel to move its photo.</p>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+
+  <section class="controls" aria-label="Cover controls">
+    <div class="group">
+      <h2>Photos</h2>
+      <label class="file-label">Add your photos
+        <input id="photo" type="file" accept="image/*" multiple>
+      </label>
+      <div class="row">
+        <button id="sample" type="button">Try a sample</button>
+        <button id="fill-all" type="button">Fill all panels with this photo</button>
+        <button id="clear-panel" type="button">Clear panel</button>
+      </div>
+      <div id="thumbs" class="thumbs" aria-label="Your photos"></div>
+      <label class="slider-label">Zoom selected panel
+        <input id="zoom" type="range" min="1" max="3" step="0.05" value="1">
+        <span id="zoom-label">1.0x</span>
+      </label>
+    </div>
+
+    <div class="group">
+      <h2>Layout</h2>
+      <div class="row">
+        <button type="button" data-layout="grid" class="active">Vice Grid</button>
+        <button type="button" data-layout="strip">Sunset Strip</button>
+        <button type="button" data-layout="hero">Hero</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Export size</h2>
+      <div class="row">
+        <button type="button" data-size data-size-w="1080" data-size-h="1080" class="active">1080 x 1080</button>
+        <button type="button" data-size data-size-w="1080" data-size-h="1350">1080 x 1350</button>
+        <button type="button" data-size data-size-w="1920" data-size-h="1080">1920 x 1080</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Caption</h2>
+      <label>Main caption
+        <input id="caption" type="text" maxlength="40" value="SUNSET HEIST">
+      </label>
+      <label>Sub-caption
+        <input id="sub" type="text" maxlength="40" value="SUNSET BAY">
+      </label>
+      <label class="slider-label">Caption size
+        <input id="caption-size" type="range" min="0.6" max="1.6" step="0.05" value="1">
+        <span id="caption-size-label">100%</span>
+      </label>
+      <div class="row" role="group" aria-label="Caption position">
+        <label class="radio"><input type="radio" name="caption-pos" value="bottom" checked> Bottom</label>
+        <label class="radio"><input type="radio" name="caption-pos" value="top"> Top</label>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Grade</h2>
+      <div class="row">
+        <button type="button" data-grade="sunset" class="active">Sunset</button>
+        <button type="button" data-grade="neon">Neon</button>
+        <button type="button" data-grade="noir">Noir</button>
+      </div>
+      <div class="row checks">
+        <label class="check"><input id="vignette" type="checkbox" checked> Vignette</label>
+        <label class="check"><input id="grain" type="checkbox" checked> Grain</label>
+        <label class="check"><input id="glow" type="checkbox"> Neon glow</label>
+      </div>
+    </div>
+
+    <button id="export" type="button" class="export">Export PNG 1080 x 1080</button>
+    <p id="status" role="status"></p>
+    <p class="fineprint">Your photos never leave this browser. Everything runs offline.</p>
+  </section>
 </main>
+
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>

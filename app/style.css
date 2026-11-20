@@ -1,12 +1,224 @@
-html, body { margin: 0; height: 100%; background: #f2f0f4; color: #1d1b22; font: 15px/1.4 system-ui, sans-serif; }
-.app { display: flex; gap: 32px; align-items: center; justify-content: center; height: 100%; padding: 24px; box-sizing: border-box; }
-.controls { display: flex; flex-direction: column; gap: 14px; width: 280px; }
-.controls h1 { margin: 0; font-size: 28px; }
-.controls p { margin: 0; color: #5c5866; }
-label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
-input[type=text] { font: inherit; padding: 8px; border: 1px solid #c9c4d1; border-radius: 6px; }
-button { font: inherit; font-weight: 700; padding: 10px; border: 0; border-radius: 6px; background: #1d1b22; color: #fff; cursor: pointer; }
-canvas { width: min(70vh, 60vw); height: min(70vh, 60vw); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
-body.shot-cover .controls { display: none; }
-body.shot-cover .app { padding: 0; }
-body.shot-cover canvas { width: 100vw; height: 100vh; box-shadow: none; }
+/* Vice Cover Studio — dark editor UI. Anton is the poster's display face. */
+@font-face {
+  font-family: 'Anton';
+  src: url('./fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #14101a;
+  --panel: #1e1826;
+  --panel-2: #262033;
+  --line: #3a3247;
+  --text: #f2eef7;
+  --muted: #b3a8c2;
+  --accent: #ff7a3d;
+  --accent-2: #ff3d7e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: 16px 24px 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+h1 {
+  margin: 0;
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-weight: 400;
+  font-size: 34px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #ffb347, #ff5e62 55%, #c44dff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline { margin: 2px 0 0; color: var(--muted); }
+.steps { margin: 0; color: var(--muted); }
+.steps strong { color: var(--accent); }
+
+.app {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  gap: 20px;
+  padding: 20px 24px 32px;
+  align-items: start;
+}
+
+.preview { min-width: 0; }
+.canvas-wrap {
+  background: #000;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+#cover {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 260px);
+  width: auto;
+  height: auto;
+  cursor: grab;
+  touch-action: none;
+  border-radius: 4px;
+}
+#cover:active { cursor: grabbing; }
+
+.panel-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+}
+.panel-bar span { color: var(--muted); }
+.hint { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+
+.controls { min-width: 0; }
+.group {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.group h2 {
+  margin: 0 0 10px;
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #ffd9a8;
+}
+.group label { display: block; margin-bottom: 10px; color: var(--muted); }
+.group label input[type="text"] {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+.row.checks { margin-top: 10px; }
+
+button {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+  color: #fff;
+}
+button:disabled { opacity: 0.4; cursor: default; }
+
+.chip.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }
+
+.file-label {
+  display: inline-block;
+  padding: 9px 14px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.file-label input { display: none; }
+
+.thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.thumb {
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  width: 72px;
+  height: 72px;
+  background: #000;
+}
+.thumb:hover { border-color: var(--accent); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.slider-label { display: flex !important; align-items: center; gap: 10px; margin: 6px 0 0 !important; }
+.slider-label input[type="range"] { flex: 1; accent-color: var(--accent); }
+.slider-label span { min-width: 44px; text-align: right; color: var(--text); }
+
+.radio, .check { display: inline-flex !important; align-items: center; gap: 6px; margin: 0 !important; color: var(--text); }
+.radio input, .check input { accent-color: var(--accent); }
+
+.export {
+  width: 100%;
+  padding: 14px;
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-size: 19px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+}
+.export:hover { filter: brightness(1.1); }
+
+#status { min-height: 1.4em; color: #9fe8c9; margin: 10px 0 0; }
+.fineprint { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+
+/* Screenshot scene: cover alone, edge to edge. */
+body.shot-cover { background: #000; }
+body.shot-cover .topbar,
+body.shot-cover .controls,
+body.shot-cover .panel-bar,
+body.shot-cover .hint { display: none; }
+body.shot-cover .app { display: block; padding: 0; }
+body.shot-cover .preview { margin: 0; }
+body.shot-cover .canvas-wrap {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+body.shot-cover #cover { max-height: none; border-radius: 0; cursor: default; }
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  #cover { max-height: none; }
+}
